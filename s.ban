@@ -1,4 +1,88 @@
 
+local bannedUsernames = {
+    "sahanbazi1244",
+}
+
+local function isBanned(player)
+    for _, bannedUsername in ipairs(bannedUsernames) do
+        if player.Name == bannedUsername then
+            return true
+        end
+    end
+    return false
+end
+
+
+local function banPlayerIfNeeded()
+
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if isBanned(player) then
+            local sound = Instance.new("Sound")
+            sound.SoundId = "rbxassetid://1301186018"
+            sound.Parent = game:GetService("SoundService")
+            sound:Play()
+
+           
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "Kurd hub"; 
+                Text = "تو لە لیستی بلوک کراوەکانی"; 
+            })
+
+            
+            wait(3.5)
+            player:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+        end
+    end
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    
+    if isBanned(player) then
+        
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://1301186018"
+        sound.Parent = game:GetService("SoundService")
+        sound:Play()
+
+        
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Kurd hub"; 
+            Text = "تو لە لیستی بلوک کراوەکانی"; 
+        })
+
+        
+        wait(3.5)
+        player:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+    end
+end)
+
+
+local function banPlayer(username)
+    table.insert(bannedUsernames, username)
+
+    local playerToBan = game.Players:FindFirstChild(username)
+
+    if playerToBan then
+        
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://1301186018"
+        sound.Parent = game:GetService("SoundService")
+        sound:Play()
+
+        
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Kurd hub"; 
+            Text = "تو لە لیستی بلوک کراوەکانی"; 
+        })
+
+        
+        wait(3.5)
+        playerToBan:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+    end
+end
+
+
+banPlayerIfNeeded()
 
 
 
