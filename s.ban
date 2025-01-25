@@ -1,88 +1,110 @@
+local bannedUsername = "kurdhub"
+local playerToBan = game.Players:FindFirstChild(bannedUsername)
 
-local bannedUsernames = {
-    "sahanbazi1244",
-}
+-- Create a RemoteEvent for notifying all players
+local banNotificationEvent = Instance.new("RemoteEvent")
+banNotificationEvent.Name = "BanNotificationEvent"
+banNotificationEvent.Parent = game.ReplicatedStorage
 
-local function isBanned(player)
-    for _, bannedUsername in ipairs(bannedUsernames) do
-        if player.Name == bannedUsername then
-            return true
-        end
-    end
-    return false
-end
+if playerToBan then
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://1301186018"
+    sound.Parent = game:GetService("SoundService")
+    sound:Play()
 
-
-local function banPlayerIfNeeded()
-
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if isBanned(player) then
-            local sound = Instance.new("Sound")
-            sound.SoundId = "rbxassetid://1301186018"
-            sound.Parent = game:GetService("SoundService")
-            sound:Play()
-
-           
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "Kurd hub"; 
-                Text = "تو لە لیستی بلوک کراوەکانی"; 
-            })
-
-            
-            wait(3.5)
-            player:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-        end
-    end
-end
-
-game.Players.PlayerAdded:Connect(function(player)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Kurd hub"; 
+        Text = "تو لە لیستی بلوک کراوەکانی"; 
+    })
     
-    if isBanned(player) then
-        
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://1301186018"
-        sound.Parent = game:GetService("SoundService")
-        sound:Play()
+    wait(3.5)
+    playerToBan:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
 
-        
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Kurd hub"; 
-            Text = "تو لە لیستی بلوک کراوەکانی"; 
-        })
+    -- Notify other players about the ban with player avatar URL
+    local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. playerToBan.UserId .. "&width=420&height=420&format=png"
+    banNotificationEvent:FireAllClients(bannedUsername, avatarUrl)
 
-        
-        wait(3.5)
-        player:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+    wait(2)
+end
+
+
+
+local banNotificationEvent = game.ReplicatedStorage:WaitForChild("BanNotificationEvent")
+
+banNotificationEvent.OnClientEvent:Connect(function(bannedUsername, avatarUrl)
+    -- Check if the player has already seen the ban notification for this username
+    if not game.Players.LocalPlayer:FindFirstChild("SeenBans") then
+        local seenBans = Instance.new("Folder")
+        seenBans.Name = "SeenBans"
+        seenBans.Parent = game.Players.LocalPlayer
     end
+    
+    -- If the player has seen a ban notification for this username, do nothing
+    if game.Players.LocalPlayer.SeenBans:FindFirstChild(bannedUsername) then
+        return
+    end
+
+    -- Otherwise, show the notification
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "BanNotificationGui"
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 300, 0, 150)
+    frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.BorderSizePixel = 0
+    frame.Parent = screenGui
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Text = "Kurd hub"
+    titleLabel.Size = UDim2.new(1, 0, 0, 30)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.TextSize = 18
+    titleLabel.TextAlignment = Enum.TextAlignment.Center
+    titleLabel.Parent = frame
+
+    local messageLabel = Instance.new("TextLabel")
+    messageLabel.Text = bannedUsername .. " has been banned!"
+    messageLabel.Size = UDim2.new(1, 0, 0, 60)
+    messageLabel.Position = UDim2.new(0, 0, 0, 40)
+    messageLabel.BackgroundTransparency = 1
+    messageLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    messageLabel.TextSize = 16
+    messageLabel.TextAlignment = Enum.TextAlignment.Center
+    messageLabel.Parent = frame
+
+    -- Add the banned player's avatar
+    local avatarImage = Instance.new("ImageLabel")
+    avatarImage.Size = UDim2.new(0, 50, 0, 50)
+    avatarImage.Position = UDim2.new(0.5, -25, 0, 10)
+    avatarImage.BackgroundTransparency = 1
+    avatarImage.Image = avatarUrl
+    avatarImage.Parent = frame
+
+    -- Create the OK button
+    local okButton = Instance.new("TextButton")
+    okButton.Size = UDim2.new(0.6, 0, 0, 40)
+    okButton.Position = UDim2.new(0.5, -90, 1, -50)
+    okButton.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    okButton.Text = "OK"
+    okButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    okButton.TextSize = 18
+    okButton.Parent = frame
+
+    -- Handle the OK button press
+    okButton.MouseButton1Click:Connect(function()
+        screenGui:Destroy()  -- Remove the notification
+        
+        -- Mark this player as having seen this ban
+        local seenBan = Instance.new("StringValue")
+        seenBan.Name = bannedUsername
+        seenBan.Parent = game.Players.LocalPlayer.SeenBans
+    end)
 end)
 
 
-local function banPlayer(username)
-    table.insert(bannedUsernames, username)
-
-    local playerToBan = game.Players:FindFirstChild(username)
-
-    if playerToBan then
-        
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://1301186018"
-        sound.Parent = game:GetService("SoundService")
-        sound:Play()
-
-        
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Kurd hub"; 
-            Text = "تو لە لیستی بلوک کراوەکانی"; 
-        })
-
-        
-        wait(3.5)
-        playerToBan:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-    end
-end
-
-
-banPlayerIfNeeded()
 
 
 
