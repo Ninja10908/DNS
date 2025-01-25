@@ -1,3 +1,40 @@
+local bannedUsername = "sahanbazi1244"
+
+
+local playerToBan = game.Players:FindFirstChild(bannedUsername)
+
+if playerToBan then
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://1301186018"
+    sound.Parent = game:GetService("SoundService")
+    sound:Play()
+
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Kurd hub"; 
+        Text = "تو لە لیستی بلوک کراوەکانی"; 
+    })
+
+    wait(3.5)
+
+    playerToBan:Kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+
+    wait(2)
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if game.Players.LocalPlayer.Name == "mahmud99kurd" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
