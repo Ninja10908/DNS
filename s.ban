@@ -21,7 +21,7 @@ end
 
 
 
-if game.Players.LocalPlayer.Name == "7amo2233:1" then -- reason: skid
+if game.Players.LocalPlayer.Name == "RASAN_721" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
 sound.SoundId = "rbxassetid://1301186018"
