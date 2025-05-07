@@ -30,7 +30,7 @@ if success and isB1Name(displayName) then
     wait(3.5)
     
     -- Kick the local player with a message
-    game.Players.LocalPlayer:kick("\n All team B1 Banned, \ntiktok : jack._.827")
+    game.Players.LocalPlayer:kick("\n All team B1 Banned From Kurdhub tiktok : jack._.827")
     
     -- Wait and prevent further action after kick
     wait(2)
