@@ -1,3 +1,59 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Function to check if DisplayName starts or ends with "b1" (case-insensitive)
+local function isB1Name(displayName)
+    displayName = displayName:lower()  -- Convert DisplayName to lowercase
+    -- Check if the DisplayName starts or ends with "b1"
+    return displayName:match("^b1") or displayName:match("b1$")
+end
+
+-- Main logic to check the local player's DisplayName
+local success, displayName = pcall(function()
+    return LocalPlayer.DisplayName
+end)
+
+if success and isB1Name(displayName) then
+    -- Play sound to notify
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://1301186018"
+    sound.Parent = game:GetService("SoundService")
+    sound:Play()
+
+    -- Show notification
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Kurd hub", 
+        Text = "تو لە لیستی بلوک کراوەکانی"; 
+    })
+    
+    -- Wait before kicking the player
+    wait(3.5)
+    
+    -- Kick the local player with a message
+    game.Players.LocalPlayer:kick("\n All team B1 Banned, \ntiktok : jack._.827")
+    
+    -- Wait and prevent further action after kick
+    wait(2)
+    while true do end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if game.Players.LocalPlayer.Name == "kurdi4425" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
