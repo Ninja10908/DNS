@@ -16,7 +16,7 @@
 
 
 
-if game.Players.LocalPlayer.Name == "kurdi4425vvd" then -- reason: skid
+if game.Players.LocalPlayer.Name == "paolo_Reko" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
 sound.SoundId = "rbxassetid://1301186018"
@@ -92,7 +92,7 @@ end
 
 
 
-if game.Players.LocalPlayer.Name == "Xatar_890:0" then -- reason: skid
+if game.Players.LocalPlayer.Name == "Safa27can" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
 sound.SoundId = "rbxassetid://1301186018"
@@ -121,7 +121,7 @@ end
 
 
 
-if game.Players.LocalPlayer.Name == "itzz_r4yo0:o" then -- reason: skid
+if game.Players.LocalPlayer.Name == "B1_RAVO" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
 sound.SoundId = "rbxassetid://1301186018"
