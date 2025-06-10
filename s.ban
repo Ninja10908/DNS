@@ -3,7 +3,7 @@
 
 
 
-if game.Players.LocalPlayer.Name == "zakarya_ayaz56" then -- reason: skid
+if game.Players.LocalPlayer.Name == "The_Noobeip" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
 sound.SoundId = "rbxassetid://1301186018"
@@ -142,7 +142,7 @@ end
 
 
 
-if game.Players.LocalPlayer.Name == "Soyvic_64" then -- reason: skid
+if game.Players.LocalPlayer.Name == "ahmad_kurdish001" then -- reason: skid
     --block
 local sound = Instance.new("Sound")
 sound.SoundId = "rbxassetid://1301186018"
