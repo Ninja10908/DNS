@@ -1,147 +1,44 @@
--- ناوی بەڕێوەبەر (ئەدمین)
-local ADMIN_NAME = "Testbandscript" -- ناوی تۆ لێرە گۆڕی
-local BAN_COMMAND = "/banfromscript"
-local BANNED_USERS = {}
+-- لیستی بەکارهێنەرە بلۆک کراوەکان
+list = {'Testbandscript', 'user2', 'Qween_Rozhe', 'exampleName'}
 
--- فەرمانی بلۆک کردنی بەکارهێنەر
-local function handleBannedPlayer(player)
-    local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://1301186018"
-    sound.Parent = game:GetService("SoundService")
-    sound:Play()
-
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Kurd hub", 
-        Text = "تو لە لیستی بلوک کراوەکانی"
-    })
+-- فەرمانی پشکنین بۆ بلۆک کردنی بەکارهێنەر
+local function checkUser()
+    local player = game.Players.LocalPlayer
+    local playerName = player.Name
     
-    wait(3.5)
-    player:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب!\n")
-end
-
--- پشکنین بۆ بەکارهێنەری بلۆک کراو
-if table.find(BANNED_USERS, game.Players.LocalPlayer.Name) then
-    handleBannedPlayer(game.Players.LocalPlayer)
-    return
-end
-
--- سیستەمی فەرمانی چات
-if game.Players.LocalPlayer.Name == ADMIN_NAME then
-    game.Players.LocalPlayer.Chatted:Connect(function(message)
-        if message:lower():sub(1, #BAN_COMMAND) == BAN_COMMAND:lower() then
-            local username = message:sub(#BAN_COMMAND + 2):match("%S+")
-            if username then
-                table.insert(BANNED_USERS, username)
-                
-                -- پیشاندانی ئاگاداری
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "Kurd hub", 
-                    Text = username .. " بە سەرکەوتوویی بلوک کرا"
-                })
-                
-                -- ئەگەر بەکارهێنەر لە یارییەکەدایە، بلۆکی بکە
-                local target = game.Players:FindFirstChild(username)
-                if target then
-                    handleBannedPlayer(target)
-                end
-            end
+    -- بگەڕێ بە لیستەکە و بزانە ئایا ناوی بەکارهێنەر لە لیستەکەیە
+    for _, blockedUser in ipairs(list) do
+        if playerName == blockedUser then
+            -- دەنگ
+            local sound = Instance.new("Sound")
+            sound.SoundId = "rbxassetid://1301186018"
+            sound.Parent = game:GetService("SoundService")
+            sound:Play()
+            
+            -- ئاگاداری
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "Kurd Hub",
+                Text = "تۆ لە لیستی بلۆک کراوەکانیت!",
+                Duration = 5
+            })
+            
+            wait(3.5)
+            player:Kick("تۆ لە لیستی بلۆک کراوەکانیت لە Kurd Hub!")
+            
+            -- بوەستێنە کۆدی تر
+            while true do end
         end
-    end)
+    end
 end
 
+-- یەکەم جار پشکنین بکە
+checkUser()
 
-
--- ناوی بەڕێوەبەر (ئەدمین)
-local ADMIN_NAME = "Testbandscript" -- ناوی تۆ لێرە بنووسە
-local BAN_COMMAND = "/banfromscript" -- فەرمانی چات بۆ بلۆک کردنی بەکارهێنەران
-local BANNED_USERS = {} -- لیستی بەکارهێنەرانی بلۆک کراو
-
--- فەرمانی بلۆک کردنی بەکارهێنەر
-local function handleBannedPlayer(player)
-    -- دەنگێک لێدەدات کاتێ بەکارهێنەرێک بلۆک دەکرێت
-    local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://1301186018"
-    sound.Parent = game:GetService("SoundService")
-    sound:Play()
-
-    -- نۆتیفیکەیشن پیشاندەدات
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Kurd hub", 
-        Text = "تو لە لیستی بلوک کراوەکانی"
-    })
-    
-    wait(3.5)
-    -- بەکارهێنەر دەکرێتە دەرەوە
-    player:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+-- پشکنینی هەموو 5 چرکە جارێک
+while true do
+    wait(5)
+    checkUser()
 end
-
--- ئەگەر بەکارهێنەر بلۆک کراو بوو
-if table.find(BANNED_USERS, game.Players.LocalPlayer.Name) then
-    handleBannedPlayer(game.Players.LocalPlayer)
-    return
-end
-
--- تەنیا بۆ بەڕێوەبەر (ئەدمین)
-if game.Players.LocalPlayer.Name == ADMIN_NAME then
-    game.Players.LocalPlayer.Chatted:Connect(function(message)
-        if message:sub(1, #BAN_COMMAND) == BAN_COMMAND then
-            local username = message:sub(#BAN_COMMAND + 2):gsub("%s+", "")
-            if username ~= "" then
-                table.insert(BANNED_USERS, username)
-                
-                -- نۆتیفیکەیشن بۆ بەڕێوەبەر
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "Kurd hub", 
-                    Text = username .. " بە سەرکەوتوویی بلوک کرا"
-                })
-                
-                -- ئەگەر ویستت بلۆک کراوەکان لە دیسکۆرد یان سێرفەر تۆمار بکەیت
-                -- sendToDiscord(username) -- ئەم فەرمانە پێویستە زیاد بکەیت
-            end
-        end
-    end)
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if game.Players.LocalPlayer.Name == "The_Noobeip" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
 
 
 
