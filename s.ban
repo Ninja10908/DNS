@@ -1,284 +1,56 @@
--- لیستی بەکارهێنەرە بلۆک کراوەکان
-list = {'Testbandscript', 'user2', 'Qween_Rozhe', 'exampleName'}
+local blockedUsers = {
+    "Qween_Rozhe",      -- reason: skid
+    "rayo_ssrr7",       -- reason: skid
+    "01KOUR",           -- reason: skid
+    "paolo_Reko",       -- reason: skid
+    "ahmad_kurdish001", -- reason: skid
+    "Aram_barwari721",  -- reason: skid
+    "Safa27can",        -- reason: skid
+    "arjankurdi15",     -- reason: skid
+    "yasr99k",          -- reason: skid
+    -- Additional 10 blocked users:
+    "Testbandscript",
+    "ProSkidderXYZ",
+    "NoobMaster99",
+    "ScriptStealer01",
+    "KurdHubLeaker",
+    "FakeAdminUser",
+    "ExploitUser2023",
+    "CopyCatScript",
+    "HackAttemptUser",
+    "BlacklistDodger"
+}
 
--- فەرمانی پشکنین بۆ بلۆک کردنی بەکارهێنەر
-local function checkUser()
-    local player = game.Players.LocalPlayer
-    local playerName = player.Name
-    
-    -- بگەڕێ بە لیستەکە و بزانە ئایا ناوی بەکارهێنەر لە لیستەکەیە
-    for _, blockedUser in ipairs(list) do
-        if playerName == blockedUser then
-            -- دەنگ
-            local sound = Instance.new("Sound")
-            sound.SoundId = "rbxassetid://1301186018"
-            sound.Parent = game:GetService("SoundService")
-            sound:Play()
-            
-            -- ئاگاداری
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "Kurd Hub",
-                Text = "تۆ لە لیستی بلۆک کراوەکانیت!",
-                Duration = 5
-            })
-            
-            wait(3.5)
-            player:Kick("تۆ لە لیستی بلۆک کراوەکانیت لە Kurd Hub!")
-            
-            -- بوەستێنە کۆدی تر
-            while true do end
-        end
+local playerName = game.Players.LocalPlayer.Name
+
+-- Check if player is in blocked list
+for _, blockedName in ipairs(blockedUsers) do
+    if playerName == blockedName then
+        -- Play sound
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://1301186018"
+        sound.Parent = game:GetService("SoundService")
+        sound:Play()
+
+        -- Show notification
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Kurd hub", 
+            Text = "تو لە لیستی بلوک کراوەکانی"
+        })
+        
+        wait(3.5)
+        
+        -- Kick player
+        game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+        
+        wait(2)
+        
+        -- Disconnect and infinite loop
+        while true do end
+        if cc then cc:Disconnect() end
+        if nsLoop then nsLoop:Disconnect() end
+        if ncLoop then ncLoop:Disconnect() end
+        
+        break
     end
-end
-
--- یەکەم جار پشکنین بکە
-checkUser()
-
--- پشکنینی هەموو 5 چرکە جارێک
-while true do
-    wait(5)
-    checkUser()
-end
-
-
-
-
-
-if game.Players.LocalPlayer.Name == "Qween_Rozhe" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
-if game.Players.LocalPlayer.Name == "rayo_ssrr7" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
-
-
-
-
-
-
-
-
-if game.Players.LocalPlayer.Name == "01KOUR" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-----------
-
-if game.Players.LocalPlayer.Name == "paolo_Reko" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
-if game.Players.LocalPlayer.Name == "ahmad_kurdish001" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
-
-
-
-
-
-
-
-
-if game.Players.LocalPlayer.Name == "Aram_barwari721" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-if game.Players.LocalPlayer.Name == "Safa27can" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
-
-
-
-
-
---- na rabit xosh 7iza😂
-if game.Players.LocalPlayer.Name == "arjankurdi15" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
-end
-
-
-
-
-
-
-
-if game.Players.LocalPlayer.Name == yasr99k" then -- reason: skid
-    --block
-local sound = Instance.new("Sound")
-sound.SoundId = "rbxassetid://1301186018"
-sound.Parent = game:GetService("SoundService")
-sound:Play()
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Kurd hub"; 
-Text = "تو لە لیستی بلوک کراوەکانی"; 
-})
-wait(3.5)
-game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-wait(2)
-while true do end
- cc:Disconnect()
-    nsLoop:Disconnect()
-    ncLoop:Disconnect()
 end
