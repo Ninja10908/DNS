@@ -9,7 +9,7 @@ local blockedUsers = {
     "arjankurdi15",     -- reason: skid
     "yasr99k",          -- reason: skid
     -- Additional 10 blocked users:
-    "Testbandscript",
+    "Testbandscri",
     "ProSkidderXYZ",
     "NoobMaster99",
     "ScriptStealer01",
