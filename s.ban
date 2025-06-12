@@ -9,7 +9,7 @@ local blockedUsers = {
     "arjankurdi15",     -- reason: skid
     "yasr99k",          -- reason: skid
     -- Additional 10 blocked users:
-    "Testbandscript",
+    "Testbandscrip",
     "ProSkidderXYZ",
     "NoobMaster99",
     "ScriptStealer01",
@@ -21,36 +21,47 @@ local blockedUsers = {
     "BlacklistDodger"
 }
 
-local playerName = game.Players.LocalPlayer.Name
+local function checkBlockedUsers()
+    local playerName = game.Players.LocalPlayer.Name
 
--- Check if player is in blocked list
-for _, blockedName in ipairs(blockedUsers) do
-    if playerName == blockedName then
-        -- Play sound
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://1301186018"
-        sound.Parent = game:GetService("SoundService")
-        sound:Play()
+    -- Check if player is in blocked list
+    for _, blockedName in ipairs(blockedUsers) do
+        if playerName == blockedName then
+            -- Play sound
+            local sound = Instance.new("Sound")
+            sound.SoundId = "rbxassetid://1301186018"
+            sound.Parent = game:GetService("SoundService")
+            sound:Play()
 
-        -- Show notification
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "Kurd hub", 
-            Text = "تو لە لیستی بلوک کراوەکانی"
-        })
-        
-        wait(3.5)
-        
-        -- Kick player
-        game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
-        
-        wait(2)
-        
-        -- Disconnect and infinite loop
-        while true do end
-        if cc then cc:Disconnect() end
-        if nsLoop then nsLoop:Disconnect() end
-        if ncLoop then ncLoop:Disconnect() end
-        
-        break
+            -- Show notification
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "Kurd hub", 
+                Text = "تو لە لیستی بلوک کراوەکانی"
+            })
+            
+            wait(3.5)
+            
+            -- Kick player
+            game.Players.LocalPlayer:kick("\nتو لە لیستی بلوک کراوەکانی لە کورد هوب !\n نامە لە تیک توک بنێرە jack._.872\n")
+            
+            wait(2)
+            
+            -- Disconnect and infinite loop
+            while true do end
+            if cc then cc:Disconnect() end
+            if nsLoop then nsLoop:Disconnect() end
+            if ncLoop then ncLoop:Disconnect() end
+            
+            break
+        end
     end
+end
+
+-- Initial check
+checkBlockedUsers()
+
+-- Set up recurring check every 5 seconds
+while true do
+    wait(5)
+    checkBlockedUsers()
 end
