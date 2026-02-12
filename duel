@@ -1,0 +1,7 @@
+local StarterGui = game:GetService("StarterGui")
+
+StarterGui:SetCore("SendNotification", {
+	Title = "Jack",
+	Text = "not Available now",
+	Duration = 5
+})
