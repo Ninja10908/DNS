@@ -1,0 +1,315 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+local Config = {
+    AutoBuyRange = 20
+}
+
+local _abActive = false
+local _abLocked = nil
+local _abPart = nil
+local _abModel = nil
+local _abBodyPos = nil
+local _abCarpetConn = nil
+local _abConveyorList = {}
+local _abPurchaseRemote = nil
+local _abRing = nil
+
+local TOOLS = {"Flying Carpet", "Cupid's Wings", "Santa's Sleigh", "Witch's Broom"}
+
+local RARITY_WORDS = {
+    common=true, uncommon=true, rare=true, epic=true,
+    legendary=true, secret=true, divine=true, rainbow=true,
+    cursed=true, gold=true, diamond=true
+}
+
+local function _abGetName(model)
+    if not model then return "Brainrot" end
+    local found = ""
+    for _, bb in ipairs(model:GetDescendants()) do
+        if bb:IsA("BillboardGui") then
+            for _, lbl in ipairs(bb:GetDescendants()) do
+                if lbl:IsA("TextLabel") and lbl.Text and lbl.Text ~= "" then
+                    local t = lbl.Text:match("^%s*(.-)%s*$")
+                    local tl = t:lower()
+                    if RARITY_WORDS[tl] then continue end
+                    if t:match("^%$") or t:match("^[%d%.]+") then continue end
+                    if found == "" and #t > 1 then found = t end
+                end
+            end
+        end
+    end
+    return found ~= "" and found or (model.Name ~= "" and model.Name or "Brainrot")
+end
+
+local function _abScan()
+    local results = {}
+    for _, obj in ipairs(Workspace:GetDescendants()) do
+        if not (obj:IsA("ProximityPrompt") and obj.Enabled) then continue end
+        local txt = (obj.ActionText or ""):lower()
+        if not (txt == "purchase" or txt:find("purchase") or txt:find("comprar") or txt:find("buy")) then continue end
+        local part = obj.Parent
+        if not part then continue end
+        local realPart = part:IsA("Attachment") and part.Parent or part
+        if not (realPart and realPart:IsA("BasePart")) then continue end
+        local model, cur = nil, realPart
+        for _ = 1, 8 do
+            if cur and cur:IsA("Model") then model = cur; break end
+            cur = cur and cur.Parent
+        end
+        table.insert(results, { name=_abGetName(model), prompt=obj, part=realPart, model=model })
+    end
+    _abConveyorList = results
+end
+
+local function _abResolveRemote()
+    if _abPurchaseRemote and _abPurchaseRemote.Parent then return _abPurchaseRemote end
+    pcall(function()
+        local net = ReplicatedStorage:FindFirstChild("Packages") and ReplicatedStorage.Packages:FindFirstChild("Net")
+        if not net then return end
+        for _, v in ipairs(net:GetChildren()) do
+            local nl = (v.Name or ""):lower()
+            for _, kw in ipairs({"buy","purchase","animal","shop","acquire","conveyor"}) do
+                if nl:find(kw) then _abPurchaseRemote = v; return end
+            end
+        end
+    end)
+    return _abPurchaseRemote
+end
+
+local function _abFire(prompt)
+    if not prompt or not prompt.Parent or not prompt.Enabled then return end
+    pcall(function() if fireproximityprompt then fireproximityprompt(prompt) end end)
+    task.spawn(function()
+        local r = _abResolveRemote()
+        if r then pcall(function()
+            if r:IsA("RemoteFunction") then r:InvokeServer(prompt.Parent)
+            elseif r:IsA("RemoteEvent") then r:FireServer(prompt.Parent) end
+        end) end
+    end)
+end
+
+local function _abEnsureBodyPos(hrp)
+    if _abBodyPos and _abBodyPos.Parent == hrp then return _abBodyPos end
+    if _abBodyPos then _abBodyPos:Destroy() end
+    local bp = Instance.new("BodyPosition", hrp)
+    bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    bp.P = 20000; bp.D = 1000; bp.Position = hrp.Position
+    _abBodyPos = bp; return bp
+end
+
+local function _abDestroyBodyPos()
+    if _abBodyPos then _abBodyPos:Destroy(); _abBodyPos = nil end
+end
+
+local function _abCreateRing()
+    local e = Workspace:FindFirstChild("AutoBuyRing"); if e then e:Destroy() end
+    local r = Instance.new("Part")
+    r.Name = "AutoBuyRing"; r.Shape = Enum.PartType.Cylinder
+    r.Anchored = true; r.CanCollide = false; r.CanTouch = false
+    r.CanQuery = false; r.CastShadow = false
+    r.Material = Enum.Material.Neon; r.Transparency = 0.5
+    r.Color = Color3.fromRGB(0, 210, 80)
+    local range = Config.AutoBuyRange
+    r.Size = Vector3.new(0.5, range*2, range*2); r.Parent = Workspace
+    _abRing = r
+end
+
+local function _abDestroyRing()
+    if _abRing then _abRing:Destroy(); _abRing = nil end
+    local e = Workspace:FindFirstChild("AutoBuyRing"); if e then e:Destroy() end
+end
+
+RunService.Heartbeat:Connect(function()
+    if not _abActive or not _abRing or not _abRing.Parent then return end
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart"); if not hrp then return end
+    local range = Config.AutoBuyRange
+    _abRing.Size = Vector3.new(0.5, range*2, range*2)
+    _abRing.CFrame = hrp.CFrame * CFrame.Angles(0, 0, math.rad(90)) + Vector3.new(0, -2.5, 0)
+end)
+
+local function _abEquipBestTool()
+    local char = LocalPlayer.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+    
+    for _, toolName in ipairs(TOOLS) do
+        local tool = char:FindFirstChild(toolName)
+        if not tool then
+            tool = LocalPlayer.Backpack:FindFirstChild(toolName)
+        end
+        if tool then
+            hum:EquipTool(tool)
+            return true
+        end
+    end
+    return false
+end
+
+local function _abStartCarpet()
+    if _abCarpetConn then _abCarpetConn:Disconnect(); _abCarpetConn = nil end
+    
+    _abEquipBestTool()
+    
+    _abCarpetConn = RunService.Heartbeat:Connect(function()
+        if not _abActive then return end
+        pcall(function()
+            local char = LocalPlayer.Character
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            if not hum then return end
+            
+            local hasTool = false
+            for _, toolName in ipairs(TOOLS) do
+                if char:FindFirstChild(toolName) then
+                    hasTool = true
+                    break
+                end
+            end
+            
+            if not hasTool then
+                _abEquipBestTool()
+            end
+        end)
+    end)
+end
+
+local function _abStopCarpet()
+    if _abCarpetConn then _abCarpetConn:Disconnect(); _abCarpetConn = nil end
+end
+
+RunService.Heartbeat:Connect(function()
+    if not _abActive or not _abPart or not _abPart.Parent then _abDestroyBodyPos(); return end
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    if not hrp then _abDestroyBodyPos(); return end
+    local bp = _abEnsureBodyPos(hrp)
+    bp.Position = _abPart.Position + Vector3.new(0, 5, 0)
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(0.08)
+        if not _abActive then continue end
+        if _abLocked and _abLocked.prompt and _abLocked.prompt.Parent and _abLocked.prompt.Enabled then
+            _abFire(_abLocked.prompt)
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(0.25)
+        if not _abActive then
+            _abLocked=nil; _abPart=nil; _abModel=nil
+            _abDestroyBodyPos(); _abStopCarpet(); continue
+        end
+        if _abPart or _abModel then
+            if not (_abPart and _abPart.Parent and _abModel and _abModel.Parent) then
+                _abLocked=nil; _abPart=nil; _abModel=nil; _abScan()
+            end
+            continue
+        end
+        _abScan()
+        local char = LocalPlayer.Character
+        local hrp = char and char:FindFirstChild("HumanoidRootPart"); if not hrp then continue end
+        local radius = Config.AutoBuyRange
+        local best, bestDist = nil, math.huge
+        for _, e in ipairs(_abConveyorList) do
+            if e.prompt and e.prompt.Parent and e.prompt.Enabled and e.part and e.part.Parent then
+                local d = (hrp.Position - e.part.Position).Magnitude
+                if d <= radius and d < bestDist then bestDist=d; best=e end
+            end
+        end
+        if best then
+            _abLocked=best; _abPart=best.part; _abModel=best.model or best.part.Parent
+            _abStartCarpet()
+        end
+    end
+end)
+
+LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(0.5)
+    if _abActive then _abCreateRing() end
+end)
+
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+local abGui = Instance.new("ScreenGui")
+abGui.Name = "AutoBuyGui"
+abGui.ResetOnSpawn = false
+abGui.Parent = PlayerGui
+
+local button = Instance.new("TextButton", abGui)
+button.Size = UDim2.new(0, 120, 0, 40)
+button.Position = UDim2.new(0.5, -60, 0.5, -20)
+button.BackgroundColor3 = Color3.fromRGB(5, 12, 5)
+button.Text = "AUTO BUY: OFF"
+button.Font = Enum.Font.GothamBlack
+button.TextSize = 12
+button.TextColor3 = Color3.fromRGB(150, 220, 150)
+button.BorderSizePixel = 0
+button.AutoButtonColor = false
+Instance.new("UICorner", button).CornerRadius = UDim.new(0, 10)
+local stroke = Instance.new("UIStroke", button)
+stroke.Color = Color3.fromRGB(0, 210, 80)
+stroke.Thickness = 1.5
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
+
+button.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = button.Position
+    end
+end)
+
+button.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        button.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+local function applyVisual()
+    if _abActive then
+        button.Text = "AUTO BUY: ON"
+        button.BackgroundColor3 = Color3.fromRGB(0, 210, 80)
+        button.TextColor3 = Color3.new(0, 0, 0)
+        stroke.Transparency = 1
+    else
+        button.Text = "AUTO BUY: OFF"
+        button.BackgroundColor3 = Color3.fromRGB(5, 12, 5)
+        button.TextColor3 = Color3.fromRGB(150, 220, 150)
+        stroke.Transparency = 0.5
+    end
+end
+
+local function doToggle()
+    _abActive = not _abActive
+    if _abActive then
+        _abCreateRing()
+        _abEquipBestTool()
+    else
+        _abDestroyRing(); _abDestroyBodyPos(); _abStopCarpet()
+        _abLocked=nil; _abPart=nil; _abModel=nil
+    end
+    applyVisual()
+end
+
+button.MouseButton1Click:Connect(doToggle)
+
+applyVisual()
