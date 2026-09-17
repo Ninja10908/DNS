@@ -1,4 +1,45 @@
 Litwlwl46wr
 Kid7apffz2xAAHgXEsv6SYcwg_olrzwzL7-0--cb2ojPjE
 fid4adazpi
-Noobini Pizzanini
+Headless Horseman
+Strawberry Elephant
+John Pork
+Skibidi Toilet
+Meowl
+Signore Carapace
+Elefanto Frigo
+Antonio
+Kalika Bros
+Rhino Helicopterino
+Love Love Bear
+Arcadragon
+Dragon Gingerini
+Dragon Cannelloni
+Dragon Aquanini
+La Supreme Combinasion
+Hydra Dragon Cannelloni
+Ketupat Bros
+Ginger Gera
+La Casa Boo
+Griffin
+Kraken
+Jelly Moby
+Pancake and Syrup
+Digi Narwhal
+Hydra Bunny
+Moby Bros
+Bunny and Eggy
+Duggy Bros
+Sammyni Cakini
+Fishino Clownino
+Los Secret Combinasionas
+Grabatron
+Orchidox
+Quackini Snackini Egg
+Spyder Elephant
+Hopilikalika Hopilikalako Egg
+Hydra Bunny Egg
+Hopilikalika Hopilikalako
+Tirilikalika Tirilikalako
+Foxini Lanternini
+Los Dragons
